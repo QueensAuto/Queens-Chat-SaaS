@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Loader2, Edit, Code, Eye } from 'lucide-react';
+import { Loader2, Edit, Code, Eye, Copy } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Button } from '../ui/button';
 import {
@@ -63,6 +63,21 @@ function ScriptTagDialog({ widget, open, onOpenChange }: { widget: ChatWidget | 
   data-site="${widget.name.toUpperCase().replace(/\s+/g, '-')}"
 ></script>`;
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(scriptTag)
+      .then(() => {
+        toast({ title: "Copied to clipboard!" });
+      })
+      .catch(err => {
+        console.error("Failed to copy text: ", err);
+        toast({
+          variant: "destructive",
+          title: "Failed to copy",
+          description: "Could not copy text to clipboard. Please copy it manually.",
+        });
+      });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -79,6 +94,7 @@ function ScriptTagDialog({ widget, open, onOpenChange }: { widget: ChatWidget | 
         </div>
         <DialogFooter>
             <Button variant="outline" onClick={() => onOpenChange(false)}>Close</Button>
+            <Button onClick={handleCopy}><Copy className="mr-2 h-4 w-4" /> Copy Script</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
