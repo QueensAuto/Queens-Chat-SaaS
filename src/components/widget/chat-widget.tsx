@@ -131,7 +131,11 @@ export function ChatWidgetComponent({
                     : 'bg-muted text-foreground'
                 }`}
               >
-                <p>{msg.text}</p>
+                {msg.sender === 'bot' ? (
+                  <div dangerouslySetInnerHTML={{ __html: msg.text }} />
+                ) : (
+                  <p>{msg.text}</p>
+                )}
               </div>
             </div>
           ))}
