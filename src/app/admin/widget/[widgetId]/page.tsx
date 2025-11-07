@@ -81,10 +81,11 @@ interface ChatWidget {
 }
 
 export default function EditWidgetPage({
-  params: { widgetId },
+  params,
 }: {
   params: { widgetId: string };
 }) {
+  const { widgetId } = params;
   const [isLoading, setIsLoading] = React.useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
