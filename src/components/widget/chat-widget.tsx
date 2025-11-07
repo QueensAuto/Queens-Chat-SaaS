@@ -128,7 +128,7 @@ export function ChatWidgetComponent({
                 className={`max-w-xs rounded-lg px-3 py-2 text-sm md:max-w-md ${
                   msg.sender === 'user'
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'
+                    : 'bg-muted text-foreground'
                 }`}
               >
                 <p>{msg.text}</p>
