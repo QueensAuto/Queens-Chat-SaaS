@@ -116,17 +116,19 @@ export function WidgetList() {
       // In a real app, this would be a server-side call to securely use the webhook secret
       // for signing the request. For now, we are just sending a test payload.
       const testPayload = {
-        event: 'test_message',
-        widgetId: widget.id,
-        sender: {
-          id: 'test-user-123',
-          role: 'user',
-        },
-        message: {
-          id: `test-message-${Date.now()}`,
-          text: 'This is a test message from your Chat Widget Factory dashboard.',
-          timestamp: new Date().toISOString(),
-        },
+        body: {
+          event: 'test_message',
+          widgetId: widget.id,
+          sender: {
+            id: 'test-user-123',
+            role: 'user',
+          },
+          message: {
+            id: `test-message-${Date.now()}`,
+            text: 'This is a test message from your Chat Widget Factory dashboard.',
+            timestamp: new Date().toISOString(),
+          },
+        }
       };
 
       const response = await fetch(widget.webhookUrl, {
