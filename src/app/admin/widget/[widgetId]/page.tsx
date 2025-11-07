@@ -85,15 +85,16 @@ export default function EditWidgetPage({
 }: {
   params: { widgetId: string };
 }) {
+  const { widgetId } = params;
   const [isLoading, setIsLoading] = React.useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
   const router = useRouter();
 
   const widgetDocRef = useMemoFirebase(() => {
-    if (!user || !params.widgetId) return null;
-    return doc(firestore, `users/${user.uid}/chatWidgets/${params.widgetId}`);
-  }, [firestore, user, params.widgetId]);
+    if (!user || !widgetId) return null;
+    return doc(firestore, `users/${user.uid}/chatWidgets/${widgetId}`);
+  }, [firestore, user, widgetId]);
 
   const { data: widget, isLoading: isWidgetLoading } =
     useDoc<ChatWidget>(widgetDocRef);
