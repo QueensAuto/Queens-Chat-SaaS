@@ -121,7 +121,7 @@ export default function EditWidgetPage({
         name: widget.name,
         webhookUrl: widget.webhookUrl,
         webhookSecret: widget.webhookSecret,
-        allowedDomains: widget.allowedDomains.join(', '),
+        allowedDomains: Array.isArray(widget.allowedDomains) ? widget.allowedDomains.join(', ') : '',
         bubbleColor: widget.brand?.bubbleColor,
         bubbleIcon: widget.brand?.bubbleIcon,
         panelColor: widget.brand?.panelColor,
