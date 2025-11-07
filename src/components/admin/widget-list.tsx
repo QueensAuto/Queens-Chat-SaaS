@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Loader2, Edit, Code, Send } from 'lucide-react';
+import { Loader2, Edit, Code, Eye } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Button } from '../ui/button';
 import {
@@ -31,6 +31,8 @@ import {
   DialogFooter,
 } from '../ui/dialog';
 import { toast } from '@/hooks/use-toast';
+import { ChatWidgetComponent } from '../widget/chat-widget';
+
 
 interface ChatWidget {
   id: string;
@@ -93,6 +95,7 @@ export function WidgetList() {
   const { user } = useUser();
   const [selectedWidget, setSelectedWidget] = useState<ChatWidget | null>(null);
   const [isScriptModalOpen, setScriptModalOpen] = useState(false);
+  const [isTestModalOpen, setTestModalOpen] = useState(false);
 
   const chatWidgetsQuery = useMemoFirebase(() => {
     if (!user) return null;
@@ -110,38 +113,10 @@ export function WidgetList() {
     setScriptModalOpen(true);
   };
   
-  const handleTestMessage = async (widget: ChatWidget) => {
-    toast({ title: "Sending test message..." });
-    try {
-      // In a real app, this would be a server-side call to securely use the webhook secret
-      // for signing the request. For now, we are just sending a test payload.
-      const testPayload = {
-        sessionId: "7c08e36781704a129017d334c6907857",
-        action: "sendMessage",
-        chatInput: "hello"
-      };
-
-      const response = await fetch(widget.webhookUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(testPayload),
-      });
-
-      if (response.ok) {
-        toast({ title: "Test message sent successfully!", description: "Check your webhook endpoint." });
-      } else {
-        const errorBody = await response.text();
-        throw new Error(`Webhook returned status ${response.status}. Response: ${errorBody}`);
-      }
-    } catch (e: any) {
-      toast({
-        variant: "destructive",
-        title: "Failed to send test message",
-        description: e.message || "Please check the webhook URL and your server's logs.",
-      });
-    }
+  const handleTestWidget = (widget: ChatWidget) => {
+    setSelectedWidget(widget);
+    setTestModalOpen(true);
   };
-
 
   return (
     <>
@@ -193,8 +168,8 @@ export function WidgetList() {
                                <Edit className="mr-2 h-4 w-4" /> Edit
                             </Link>
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => handleTestMessage(widget)}>
-                           <Send className="mr-2 h-4 w-4" /> Test
+                        <Button variant="outline" size="sm" onClick={() => handleTestWidget(widget)}>
+                           <Eye className="mr-2 h-4 w-4" /> Test
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -215,6 +190,23 @@ export function WidgetList() {
         </CardContent>
       </Card>
       <ScriptTagDialog widget={selectedWidget} open={isScriptModalOpen} onOpenChange={setScriptModalOpen} />
+      <Dialog open={isTestModalOpen} onOpenChange={setTestModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Test Widget</DialogTitle>
+            <DialogDescription>
+              This is a live preview of your chat widget.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedWidget && (
+            <ChatWidgetComponent
+              widgetConfig={selectedWidget}
+              // This is a test environment, so we pass a mock session ID
+              sessionId={`test-session-${selectedWidget.id}`}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
