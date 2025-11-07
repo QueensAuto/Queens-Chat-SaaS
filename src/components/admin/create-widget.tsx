@@ -12,6 +12,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,10 +29,27 @@ import { collection } from 'firebase/firestore';
 import { toast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 
 const widgetSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  configuration: z.string().min(1, 'Configuration is required'),
+  name: z.string().min(1, 'Widget Name is required'),
+  webhookUrl: z.string().url('Please enter a valid URL'),
+  webhookSecret: z.string().min(1, 'Webhook Secret is required'),
+  allowedDomains: z.string().min(1, 'At least one domain is required'),
+  bubbleColor: z.string().optional(),
+  bubbleIcon: z.string().optional(),
+  panelColor: z.string().optional(),
+  headerTitle: z.string().optional(),
+  welcomeMessage: z.string().optional(),
+  defaultLanguage: z.enum(['EN', 'ES']).default('EN'),
+  position: z.enum(['left', 'right']).default('right'),
 });
 
 type WidgetFormData = z.infer<typeof widgetSchema>;
@@ -46,7 +64,15 @@ export function CreateWidget() {
     resolver: zodResolver(widgetSchema),
     defaultValues: {
       name: '',
-      configuration: `{\n  "theme": "light",\n  "headerText": "Welcome!"\n}`,
+      webhookUrl: '',
+      webhookSecret: '',
+      allowedDomains: '',
+      bubbleColor: '#000000',
+      panelColor: '#FFFFFF',
+      headerTitle: 'Chat with us!',
+      welcomeMessage: 'Hello! How can we help you today?',
+      defaultLanguage: 'EN',
+      position: 'right',
     },
   });
 
@@ -67,11 +93,27 @@ export function CreateWidget() {
         firestore,
         `users/${user.uid}/chatWidgets`
       );
-      await addDocumentNonBlocking(chatWidgetsCollection, {
+      
+      const newWidget = {
         name: data.name,
-        configuration: data.configuration,
+        webhookUrl: data.webhookUrl,
+        webhookSecret: data.webhookSecret,
+        allowedDomains: data.allowedDomains.split(',').map(d => d.trim()),
+        brand: {
+          bubbleColor: data.bubbleColor,
+          bubbleIcon: data.bubbleIcon,
+          panelColor: data.panelColor,
+          headerTitle: data.headerTitle,
+          welcomeMessage: data.welcomeMessage,
+          position: data.position,
+        },
+        behavior: {
+          defaultLanguage: data.defaultLanguage,
+        },
         userId: user.uid,
-      });
+      };
+
+      await addDocumentNonBlocking(chatWidgetsCollection, newWidget);
 
       toast({
         title: 'Widget Created!',
@@ -95,45 +137,201 @@ export function CreateWidget() {
       <DialogTrigger asChild>
         <Button>Create Widget</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>Create New Chat Widget</DialogTitle>
           <DialogDescription>
-            Fill in the details to create a new chat widget.
+            Fill in the details to configure your new chat widget.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Widget Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="My Awesome Widget" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="configuration"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Configuration (JSON)</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder='{ "theme": "dark" }' {...field} className="h-48 font-mono" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 overflow-y-auto max-h-[70vh] p-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Identity</h3>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Widget Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Queens Auto" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="webhookUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Webhook URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://api.example.com/webhook" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="webhookSecret"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Webhook Secret</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="••••••••••••••" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="allowedDomains"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Allowed Domains</FormLabel>
+                      <FormControl>
+                        <Input placeholder="example.com, my-site.com" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Comma-separated list of domains where this widget can be embedded.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Branding</h3>
+                 <FormField
+                  control={form.control}
+                  name="bubbleColor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Bubble Color</FormLabel>
+                      <FormControl>
+                        <Input type="color" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="bubbleIcon"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Bubble Icon (Emoji or URL)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="💬 or https://example.com/icon.png" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="panelColor"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Panel Color</FormLabel>
+                      <FormControl>
+                        <Input type="color" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="headerTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Header Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Chat with Queens Auto" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="welcomeMessage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Welcome Message</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Hello! How can we help you today?" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={form.control}
+                  name="position"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Widget Position</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex space-x-4"
+                        >
+                          <FormItem className="flex items-center space-x-2">
+                            <FormControl>
+                              <RadioGroupItem value="left" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Left</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-2">
+                            <FormControl>
+                              <RadioGroupItem value="right" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Right</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <h3 className="text-lg font-medium pt-4">Behavior</h3>
+                 <FormField
+                  control={form.control}
+                  name="defaultLanguage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Default Language</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a language" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="EN">English</SelectItem>
+                          <SelectItem value="ES">Spanish</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
             <DialogFooter>
+              <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create
+                Create Widget
               </Button>
             </DialogFooter>
           </form>
