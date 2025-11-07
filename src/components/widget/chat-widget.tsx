@@ -80,13 +80,17 @@ export function ChatWidgetComponent({
       if (!response.ok) {
         throw new Error(`Webhook failed with status ${response.status}`);
       }
-
-      // In a real scenario, the webhook would respond with the bot's message.
-      // Here we will simulate a bot response after a short delay.
-      const botResponse: Message = await response.json();
+      
+      const responseData = await response.json();
+      
+      const botMessage: Message = {
+        id: 'bot-' + Date.now().toString(),
+        text: responseData.text || "Sorry, I didn't understand that.", // Fallback text
+        sender: 'bot',
+      };
       
       setTimeout(() => {
-        setMessages((prev) => [...prev, botResponse]);
+        setMessages((prev) => [...prev, botMessage]);
       }, 500);
 
 
