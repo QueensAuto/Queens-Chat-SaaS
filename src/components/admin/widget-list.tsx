@@ -74,7 +74,7 @@ function ScriptTagDialog({ widget, open, onOpenChange }: { widget: ChatWidget | 
           </DialogDescription>
         </DialogHeader>
         <div className="bg-gray-100 dark:bg-gray-800 rounded p-4 my-4">
-          <pre className="text-sm overflow-x-auto">
+          <pre className="text-sm overflow-x-auto whitespace-pre-wrap break-all">
             <code>{scriptTag}</code>
           </pre>
         </div>
