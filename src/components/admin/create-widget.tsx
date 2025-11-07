@@ -41,7 +41,7 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 const widgetSchema = z.object({
   name: z.string().min(1, 'Widget Name is required'),
   webhookUrl: z.string().url('Please enter a valid URL'),
-  webhookSecret: z.string().min(1, 'Webhook Secret is required'),
+  webhookSecret: z.string().optional(),
   allowedDomains: z.string().min(1, 'At least one domain is required'),
   bubbleColor: z.string().optional(),
   bubbleIcon: z.string().optional(),
@@ -184,6 +184,9 @@ export function CreateWidget() {
                       <FormControl>
                         <Input type="password" placeholder="••••••••••••••" {...field} />
                       </FormControl>
+                       <FormDescription>
+                        Optional, but recommended for verifying webhook authenticity.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
