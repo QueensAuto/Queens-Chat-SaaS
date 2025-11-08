@@ -33,6 +33,7 @@ import {
 } from '../ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { ChatWidgetComponent } from '../widget/chat-widget';
+import type { WidgetTheme } from '@/app/admin/theming/[widgetId]/page';
 
 
 interface ChatWidget {
@@ -41,7 +42,9 @@ interface ChatWidget {
   userId: string;
   webhookUrl: string;
   allowedDomains: string[];
-  brand: {
+  theme?: Partial<WidgetTheme>;
+  // Legacy fields
+  brand?: {
     bubbleColor?: string;
     bubbleIcon?: string;
     panelColor?: string;
@@ -49,7 +52,7 @@ interface ChatWidget {
     welcomeMessage?: string;
     position?: 'left' | 'right';
   };
-  behavior: {
+  behavior?: {
     defaultLanguage?: 'EN' | 'ES';
   };
 }
@@ -208,20 +211,15 @@ export function WidgetList() {
       </Card>
       <ScriptTagDialog widget={selectedWidget} open={isScriptModalOpen} onOpenChange={setScriptModalOpen} />
       <Dialog open={isTestModalOpen} onOpenChange={setTestModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Test Widget</DialogTitle>
-            <DialogDescription>
-              This is a live preview of your chat widget.
-            </DialogDescription>
-          </DialogHeader>
-          {selectedWidget && (
-            <ChatWidgetComponent
-              widgetConfig={selectedWidget}
-              // This is a test environment, so we pass a mock session ID
-              sessionId={`test-session-${selectedWidget.id}`}
-            />
-          )}
+        <DialogContent className="sm:max-w-[425px] p-0 border-0 bg-transparent shadow-none">
+          <div className="h-[70vh] w-full">
+            {selectedWidget && (
+              <ChatWidgetComponent
+                widgetConfig={selectedWidget}
+                sessionId={`test-session-${selectedWidget.id}`}
+              />
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </>
