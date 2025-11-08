@@ -62,23 +62,26 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
           </TabsContent>
           <TabsContent value="widget">
             <div style={widgetStyle} className="mt-4 flex flex-col h-[60vh] w-full max-w-sm mx-auto overflow-hidden">
-                <header style={headerStyle} className="p-4 border-b flex items-center gap-2">
+                <header style={headerStyle} className="p-4 border-b flex items-center gap-3">
                     {theme.logoUrl && (
                       <Image 
                         src={theme.logoUrl} 
                         alt="Logo" 
-                        width={32} 
-                        height={32} 
-                        className="h-8 w-8 object-contain"
+                        width={40} 
+                        height={40} 
+                        className="h-10 w-10 object-contain rounded-full"
                       />
                     )}
-                    <h3 className="font-bold text-lg">{theme.headerTitle}</h3>
+                    <div>
+                        <h3 className="font-bold text-lg">{theme.headerTitle}</h3>
+                        {theme.headerSubtext && <p className="text-sm text-muted-foreground">{theme.headerSubtext}</p>}
+                    </div>
                 </header>
                 <div className="flex-grow p-4 space-y-4">
                     {/* Placeholder messages */}
                 </div>
                 <footer className="p-2 border-t flex items-center gap-2">
-                    <input type="text" placeholder="Type a message..." className="flex-grow bg-transparent focus:outline-none" />
+                    <input type="text" placeholder="Type a message..." className="flex-grow bg-transparent focus-visible:outline-none" />
                     <Button size="icon" style={{backgroundColor: theme.primaryColor}}>
                         <Send size={20} />
                     </Button>

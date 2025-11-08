@@ -91,6 +91,15 @@ export function ThemeControls({ theme, updateTheme }: ThemeControlsProps) {
                   }
                 />
               </div>
+               <div className="space-y-2">
+                <Label>Header Subtext</Label>
+                <Input
+                  value={theme.headerSubtext}
+                  onChange={(e) =>
+                    updateTheme({ headerSubtext: e.target.value })
+                  }
+                />
+              </div>
               <div className="space-y-2">
                 <Label>Font Family</Label>
                 <Select

@@ -25,6 +25,7 @@ export interface WidgetTheme {
   // Branding
   logoUrl?: string;
   headerTitle: string;
+  headerSubtext: string;
   fontFamily: string;
   fontSize: number;
   avatarStyle: 'round' | 'square';

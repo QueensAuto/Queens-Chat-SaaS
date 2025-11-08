@@ -5,6 +5,7 @@ import type { WidgetTheme } from '@/app/admin/theming/[widgetId]/page';
 export const defaultTheme: WidgetTheme = {
   logoUrl: '',
   headerTitle: 'Chat with us!',
+  headerSubtext: 'We are here to help',
   fontFamily: 'Inter',
   fontSize: 14,
   avatarStyle: 'round',
@@ -49,6 +50,7 @@ export const defaultTheme: WidgetTheme = {
 export const darkTheme: WidgetTheme = {
     ...defaultTheme,
     headerTitle: 'Dark Mode Chat',
+    headerSubtext: 'Online 24/7',
     primaryColor: '#6366F1', // Indigo 500
     secondaryColor: '#1F2937', // Gray 800
     accentColor: '#EC4899', // Pink 500
@@ -59,6 +61,7 @@ export const darkTheme: WidgetTheme = {
 export const playfulTheme: WidgetTheme = {
     ...defaultTheme,
     headerTitle: 'Let\'s have fun!',
+    headerSubtext: 'Ask me anything!',
     fontFamily: 'Comic Sans MS',
     primaryColor: '#FBBF24', // Amber 400
     secondaryColor: '#F3F4F6', // Gray 100
