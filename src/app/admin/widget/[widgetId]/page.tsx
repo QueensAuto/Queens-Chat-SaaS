@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -85,7 +86,7 @@ export default function EditWidgetPage({
 }: {
   params: { widgetId: string };
 }) {
-  const { widgetId } = params;
+  const { widgetId } = React.use(params);
   const [isLoading, setIsLoading] = React.useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
