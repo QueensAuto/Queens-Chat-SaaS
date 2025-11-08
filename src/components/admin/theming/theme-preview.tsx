@@ -60,7 +60,10 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
                 }}>
                     <div className="relative">
                         {theme.bubbleMessage && (
-                            <div className="absolute bottom-full mb-2 w-max max-w-xs rounded-lg bg-card p-3 shadow-md">
+                            <div className={cn(
+                                "absolute bottom-full mb-2 w-max max-w-xs rounded-lg bg-card p-3 shadow-md",
+                                theme.bubblePosition === 'bottom-left' ? "left-0" : "right-0"
+                            )}>
                                 <p className="text-sm text-card-foreground">{theme.bubbleMessage}</p>
                             </div>
                         )}
