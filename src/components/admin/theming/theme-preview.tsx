@@ -121,7 +121,19 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
                 <CardHeader><CardTitle>Message Animation Preview</CardTitle></CardHeader>
                 <CardContent className="h-48 p-4 space-y-4" style={messageStyle}>
                     <div className="flex items-start gap-2">
-                        <div style={avatarStyle} className="h-8 w-8 bg-gray-300 flex-shrink-0 flex items-center justify-center"><Bot size={20}/></div>
+                         <div style={avatarStyle} className="h-8 w-8 bg-gray-300 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                            {theme.logoUrl ? (
+                               <Image 
+                                 src={theme.logoUrl} 
+                                 alt="Bot Avatar"
+                                 width={32}
+                                 height={32}
+                                 className="h-full w-full object-cover"
+                               />
+                            ) : (
+                                <Bot size={20}/>
+                            )}
+                        </div>
                         <div className="p-3 rounded-lg bg-gray-200">
                            <p>This is a message from the bot.</p>
                         </div>
