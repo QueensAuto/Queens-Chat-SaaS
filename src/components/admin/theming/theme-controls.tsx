@@ -73,7 +73,7 @@ export function ThemeControls({ theme, updateTheme }: ThemeControlsProps) {
   return (
     <ScrollArea className="h-full bg-background">
       <div className="p-4">
-        <Accordion type="multiple" defaultValue={['item-1']} className="w-full">
+        <Accordion type="multiple" className="w-full">
           {/* 1. Branding */}
           <AccordionItem value="item-1">
             <AccordionTrigger>Branding</AccordionTrigger>
