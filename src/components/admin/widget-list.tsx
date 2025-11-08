@@ -212,6 +212,10 @@ export function WidgetList() {
       <ScriptTagDialog widget={selectedWidget} open={isScriptModalOpen} onOpenChange={setScriptModalOpen} />
       <Dialog open={isTestModalOpen} onOpenChange={setTestModalOpen}>
         <DialogContent className="sm:max-w-[425px] p-0 border-0 bg-transparent shadow-none">
+           <DialogHeader className="sr-only">
+            <DialogTitle>Test Widget</DialogTitle>
+            <DialogDescription>A preview of your configured chat widget.</DialogDescription>
+          </DialogHeader>
           <div className="h-[70vh] w-full">
             {selectedWidget && (
               <ChatWidgetComponent
