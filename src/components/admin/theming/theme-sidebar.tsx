@@ -9,8 +9,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import type { WidgetTheme } from '@/app/admin/theming/[widgetId]/page';
+import { defaultTheme, darkTheme, playfulTheme } from '@/lib/themes';
 
-export function ThemeSidebar() {
+interface ThemeSidebarProps {
+  setTheme: (theme: WidgetTheme) => void;
+}
+
+export function ThemeSidebar({ setTheme }: ThemeSidebarProps) {
   return (
     <div className="flex h-full flex-col p-4 bg-background">
       <div className="mb-4">
@@ -25,9 +31,9 @@ export function ThemeSidebar() {
           <ScrollArea className="h-[60vh]">
             <div className="space-y-2">
                  {/* Placeholder for theme list */}
-                <Button variant="ghost" className="w-full justify-start">Default Theme</Button>
-                <Button variant="ghost" className="w-full justify-start">Dark Mode</Button>
-                <Button variant="ghost" className="w-full justify-start">Playful</Button>
+                <Button variant="ghost" className="w-full justify-start" onClick={() => setTheme(defaultTheme)}>Default Theme</Button>
+                <Button variant="ghost" className="w-full justify-start" onClick={() => setTheme(darkTheme)}>Dark Mode</Button>
+                <Button variant="ghost" className="w-full justify-start" onClick={() => setTheme(playfulTheme)}>Playful</Button>
             </div>
           </ScrollArea>
         </CardContent>

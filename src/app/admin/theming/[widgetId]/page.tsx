@@ -17,6 +17,7 @@ import { doc } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { defaultTheme } from '@/lib/themes';
 
 
 // Define the structure for a theme based on the spec
@@ -73,51 +74,6 @@ export interface WidgetTheme {
   soundTheme: 'soft-pops' | 'arcade-clicks' | 'garage';
   hapticFeedback: boolean;
 }
-
-// Default theme state
-const defaultTheme: WidgetTheme = {
-  logoUrl: '',
-  headerTitle: 'Chat with us!',
-  fontFamily: 'Inter',
-  fontSize: 14,
-  avatarStyle: 'round',
-  primaryColor: '#94B4E4',
-  secondaryColor: '#F0F4F8',
-  accentColor: '#B19CD9',
-  backgroundBlur: 10,
-  colorMode: 'light',
-  idlePulse: true,
-  idlePulseStrength: 50,
-  hoverRipple: true,
-  hoverRippleSize: 50,
-  iconSpinOnHover: false,
-  idleNudgeSeconds: 10,
-  bubbleSize: 'normal',
-  bubblePosition: 'bottom-right',
-  openAnimation: 'scale-fade',
-  openBackgroundBlur: true,
-  openAnimationSpeed: 'normal',
-  messageEntryStyle: 'slide-in',
-  shimmerIntensity: 50,
-  typingIndicatorStyle: 'dots',
-  sendButtonStyle: 'normal',
-  sendButtonSound: true,
-  sendConfettiOnSuccess: true,
-  successConfetti: 'small-burst',
-  couponRevealStyle: 'fade-in',
-  celebrationDuration: 3,
-  closeAnimation: 'shrink',
-  winkAfterClose: true,
-  roundedCorners: 12,
-  shadowIntensity: 50,
-  borderThickness: 1,
-  borderColor: '#E5E7EB',
-  windowSize: 'medium',
-  soundEffects: true,
-  soundVolume: 50,
-  soundTheme: 'soft-pops',
-  hapticFeedback: true,
-};
 
 // Firestore document structure for a widget
 interface ChatWidgetDoc {
@@ -215,7 +171,7 @@ export default function ThemingPage({ params }: { params: { widgetId: string } }
         className="flex-grow rounded-lg border"
       >
         <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
-          <ThemeSidebar />
+          <ThemeSidebar setTheme={setTheme} />
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={50}>
