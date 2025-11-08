@@ -54,11 +54,11 @@ export function ThemePreview({ theme }: ThemePreviewProps) {
           <TabsContent value="bubble">
             <Card className="mt-4">
                 <CardHeader><CardTitle>Launcher Bubble Preview</CardTitle></CardHeader>
-                <CardContent className="flex items-center justify-center h-48">
-                    <div className={cn(
-                        "relative",
-                        theme.bubblePosition === 'bottom-left' ? 'self-end justify-self-start' : 'self-end justify-self-end'
-                    )}>
+                <CardContent className="flex h-48" style={{
+                  justifyContent: theme.bubblePosition === 'bottom-left' ? 'flex-start' : 'flex-end',
+                  alignItems: 'flex-end',
+                }}>
+                    <div className="relative">
                         {theme.bubbleMessage && (
                             <div className="absolute bottom-full mb-2 w-max max-w-xs rounded-lg bg-card p-3 shadow-md">
                                 <p className="text-sm text-card-foreground">{theme.bubbleMessage}</p>
