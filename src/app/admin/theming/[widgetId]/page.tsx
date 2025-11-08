@@ -16,7 +16,6 @@ import { useDoc, useFirestore, useMemoFirebase, useUser, updateDocumentNonBlocki
 import { doc } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 import { defaultTheme } from '@/lib/themes';
 
 
@@ -90,7 +89,6 @@ export default function ThemingPage({ params }: { params: { widgetId: string } }
   const [isSaving, setIsSaving] = React.useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
-  const router = useRouter();
 
   const widgetDocRef = useMemoFirebase(() => {
     if (!user || !widgetId) return null;
@@ -134,7 +132,6 @@ export default function ThemingPage({ params }: { params: { widgetId: string } }
         title: 'Theme Saved!',
         description: 'Your changes have been saved successfully.',
       });
-      router.push('/admin');
     } catch (error: any) {
        toast({
         variant: 'destructive',
